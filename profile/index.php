@@ -4,7 +4,16 @@ requireLogin();
 
 $page_title = 'My Profile';
 $userId = $_SESSION['user_id'];
+
+// ✅ FIX: $user variable ko check karein
 $user = getUserById($userId);
+
+// ✅ FIX: Agar user nahi mila toh redirect
+if (!$user) {
+    $_SESSION['error'] = 'User not found. Please login again.';
+    header('Location: ' . BASE_URL . 'login.php');
+    exit();
+}
 
 // Get user data
 $skills = getUserSkills($userId);
@@ -47,8 +56,8 @@ include_once '../includes/header.php';
                     <i class="fas fa-edit me-2"></i>Edit Profile
                 </a>
                 <a href="<?php echo BASE_URL; ?>profile/change-password.php" class="btn btn-outline-secondary w-100 mt-2">
-    <i class="fas fa-key me-2"></i>Change Password
-</a>
+                    <i class="fas fa-key me-2"></i>Change Password
+                </a>
             </div>
         </div>
     </div>
