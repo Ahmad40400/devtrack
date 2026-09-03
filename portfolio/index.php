@@ -7,14 +7,12 @@ $username = $_GET['username'] ?? '';
 // If no username provided, check if user is logged in
 if (empty($username)) {
     if (isAuthenticated()) {
-        // Redirect to logged-in user's portfolio
         $user = getUserById($_SESSION['user_id']);
         if ($user) {
             header('Location: ' . BASE_URL . 'portfolio/?username=' . urlencode($user['username']));
             exit();
         }
     } else {
-        // If not logged in, show a nice message or redirect to login
         ?>
         <!DOCTYPE html>
         <html lang="en">
@@ -26,63 +24,111 @@ if (empty($username)) {
             <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
             <style>
                 body {
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    background: #f8fafc;
                     min-height: 100vh;
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
                 }
-                .error-card {
+                .card {
                     background: white;
                     border-radius: 20px;
                     padding: 50px;
-                    max-width: 500px;
-                    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                    max-width: 480px;
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.06);
                     text-align: center;
                 }
-                .error-card i {
-                    font-size: 4rem;
-                    color: #667eea;
-                    margin-bottom: 20px;
+                .card .icon {
+                    width: 72px;
+                    height: 72px;
+                    background: rgba(99,102,241,0.1);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto 20px;
                 }
-                .error-card h2 {
-                    color: #333;
-                    margin-bottom: 15px;
+                .card .icon i {
+                    font-size: 2rem;
+                    color: #6366f1;
                 }
-                .error-card p {
-                    color: #666;
-                    margin-bottom: 25px;
+                .card h2 {
+                    color: #1e293b;
+                    font-weight: 700;
+                    font-size: 1.5rem;
+                    margin-bottom: 8px;
+                }
+                .card p {
+                    color: #64748b;
+                    font-size: 0.95rem;
+                    margin-bottom: 24px;
                 }
                 .btn-primary {
-                    background: #667eea;
+                    background: #6366f1;
                     border: none;
-                    padding: 10px 30px;
-                    border-radius: 50px;
+                    padding: 10px 28px;
+                    border-radius: 10px;
+                    font-weight: 600;
+                    font-size: 0.9rem;
                 }
                 .btn-primary:hover {
-                    background: #5a6fd6;
-                    transform: translateY(-2px);
+                    background: #4f46e5;
+                    transform: translateY(-1px);
+                    box-shadow: 0 8px 25px rgba(99,102,241,0.25);
+                }
+                .btn-outline {
+                    border: 2px solid #e2e8f0;
+                    background: transparent;
+                    padding: 10px 28px;
+                    border-radius: 10px;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    color: #475569;
+                    text-decoration: none;
+                    display: inline-block;
+                }
+                .btn-outline:hover {
+                    background: #f8fafc;
+                    border-color: #cbd5e1;
+                }
+                .search-input {
+                    border-radius: 10px;
+                    padding: 10px 16px;
+                    border: 2px solid #e2e8f0;
+                    font-size: 0.9rem;
+                }
+                .search-input:focus {
+                    border-color: #6366f1;
+                    box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+                }
+                .divider {
+                    border: none;
+                    border-top: 1px solid #f1f5f9;
+                    margin: 24px 0;
                 }
             </style>
         </head>
         <body>
-            <div class="error-card">
-                <i class="fas fa-user-circle"></i>
-                <h2>Portfolio Viewer</h2>
-                <p>Please specify a username to view their portfolio, or <a href="<?php echo BASE_URL; ?>login.php">login</a> to view your own.</p>
-                <div class="d-flex gap-2 justify-content-center flex-wrap">
+            <div class="card">
+                <div class="icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h2>Developer Portfolio</h2>
+                <p>View any developer's work by searching their username</p>
+                <div class="d-flex gap-2 justify-content-center flex-wrap mb-3">
                     <a href="<?php echo BASE_URL; ?>login.php" class="btn btn-primary">
                         <i class="fas fa-sign-in-alt me-2"></i>Login
                     </a>
-                    <a href="<?php echo BASE_URL; ?>register.php" class="btn btn-outline-primary">
+                    <a href="<?php echo BASE_URL; ?>register.php" class="btn-outline">
                         <i class="fas fa-user-plus me-2"></i>Register
                     </a>
                 </div>
-                <hr class="my-4">
+                <hr class="divider">
                 <form action="" method="GET" class="d-flex gap-2">
-                    <input type="text" name="username" class="form-control" placeholder="Enter username..." required>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-search"></i>
+                    <input type="text" name="username" class="form-control search-input" placeholder="Enter username..." required>
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fas fa-arrow-right"></i>
                     </button>
                 </form>
             </div>
@@ -104,7 +150,6 @@ if ($username) {
     $user = getUserByUsername($username);
     if ($user) {
         $userId = $user['id'];
-        // Get only public projects
         $projects = fetchAll("
             SELECT * FROM projects 
             WHERE user_id = ? AND (is_public = 1 OR is_public IS NULL) 
@@ -114,15 +159,12 @@ if ($username) {
         $goals = fetchAll("
             SELECT * FROM learning_goals 
             WHERE user_id = ? AND status = 'completed' 
-            ORDER BY completed_at DESC LIMIT 5
+            ORDER BY completed_at DESC LIMIT 6
         ", [$userId]);
-        
-        // Get GitHub profile
         $github = fetchOne("SELECT * FROM github_profiles WHERE user_id = ?", [$userId]);
     }
 }
 
-// If no user found, show error
 if (!$user) {
     ?>
     <!DOCTYPE html>
@@ -130,72 +172,114 @@ if (!$user) {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>User Not Found - DevTrack</title>
+        <title>User Not Found</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
         <style>
             body {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: #f8fafc;
                 min-height: 100vh;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             }
-            .error-card {
+            .card {
                 background: white;
                 border-radius: 20px;
                 padding: 50px;
-                max-width: 500px;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                max-width: 480px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.06);
                 text-align: center;
             }
-            .error-card i {
-                font-size: 4rem;
-                color: #dc3545;
-                margin-bottom: 20px;
+            .card .icon {
+                width: 72px;
+                height: 72px;
+                background: rgba(239,68,68,0.1);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 20px;
             }
-            .error-card h2 {
-                color: #333;
-                margin-bottom: 15px;
+            .card .icon i {
+                font-size: 2rem;
+                color: #ef4444;
             }
-            .error-card p {
-                color: #666;
-                margin-bottom: 25px;
+            .card h2 {
+                color: #1e293b;
+                font-weight: 700;
+                font-size: 1.5rem;
+                margin-bottom: 8px;
+            }
+            .card p {
+                color: #64748b;
+                font-size: 0.95rem;
+                margin-bottom: 24px;
             }
             .btn-primary {
-                background: #667eea;
+                background: #6366f1;
                 border: none;
-                padding: 10px 30px;
-                border-radius: 50px;
+                padding: 10px 28px;
+                border-radius: 10px;
+                font-weight: 600;
             }
             .btn-primary:hover {
-                background: #5a6fd6;
-                transform: translateY(-2px);
+                background: #4f46e5;
+                transform: translateY(-1px);
+                box-shadow: 0 8px 25px rgba(99,102,241,0.25);
             }
-            .btn-secondary {
-                border-radius: 50px;
-                padding: 10px 30px;
+            .btn-outline {
+                border: 2px solid #e2e8f0;
+                background: transparent;
+                padding: 10px 28px;
+                border-radius: 10px;
+                font-weight: 600;
+                color: #475569;
+                text-decoration: none;
+                display: inline-block;
+            }
+            .btn-outline:hover {
+                background: #f8fafc;
+                border-color: #cbd5e1;
+            }
+            .search-input {
+                border-radius: 10px;
+                padding: 10px 16px;
+                border: 2px solid #e2e8f0;
+                font-size: 0.9rem;
+            }
+            .search-input:focus {
+                border-color: #6366f1;
+                box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+            }
+            .divider {
+                border: none;
+                border-top: 1px solid #f1f5f9;
+                margin: 24px 0;
             }
         </style>
     </head>
     <body>
-        <div class="error-card">
-            <i class="fas fa-user-slash"></i>
+        <div class="card">
+            <div class="icon">
+                <i class="fas fa-user-slash"></i>
+            </div>
             <h2>User Not Found</h2>
-            <p>The username "<strong><?php echo sanitizeOutput($username); ?></strong>" does not exist in our system.</p>
-            <div class="d-flex gap-2 justify-content-center flex-wrap">
+            <p>The username "<strong><?php echo sanitizeOutput($username); ?></strong>" does not exist.</p>
+            <div class="d-flex gap-2 justify-content-center flex-wrap mb-3">
                 <a href="<?php echo BASE_URL; ?>" class="btn btn-primary">
                     <i class="fas fa-home me-2"></i>Home
                 </a>
-                <a href="<?php echo BASE_URL; ?>users/" class="btn btn-secondary">
+                <a href="<?php echo BASE_URL; ?>users/" class="btn-outline">
                     <i class="fas fa-users me-2"></i>Find Developers
                 </a>
             </div>
-            <hr class="my-4">
+            <hr class="divider">
             <form action="" method="GET" class="d-flex gap-2">
-                <input type="text" name="username" class="form-control" placeholder="Try another username..." required>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-search"></i>
+                <input type="text" name="username" class="form-control search-input" placeholder="Try another..." required>
+                <button type="submit" class="btn btn-primary px-4">
+                    <i class="fas fa-arrow-right"></i>
                 </button>
             </form>
         </div>
@@ -216,438 +300,611 @@ $page_title = ($user['full_name'] ?? $user['username']) . ' - Portfolio';
     <title><?php echo sanitizeOutput($page_title); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="<?php echo BASE_URL; ?>assets/css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #667eea;
-            --secondary-color: #764ba2;
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
-        .portfolio-hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 80px 0;
-            margin-bottom: 40px;
+        body {
+            background: #fafafa;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: #0f172a;
+            color: #ffffff;
+            padding: 70px 0 50px;
             position: relative;
             overflow: hidden;
         }
         
-        .portfolio-hero::before {
+        .hero::after {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 500px;
-            height: 500px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 50%;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #6366f1, #a855f7, #6366f1);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
         }
         
-        .portfolio-hero::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 300px;
-            height: 300px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 50%;
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
         
-        .portfolio-hero .avatar {
-            width: 150px;
-            height: 150px;
+        .hero .container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-avatar {
+            width: 100px;
+            height: 100px;
             object-fit: cover;
-            border: 4px solid white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            transition: transform 0.3s;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
         }
         
-        .portfolio-hero .avatar:hover {
-            transform: scale(1.05);
+        .hero .badge-role {
+            display: inline-block;
+            background: rgba(99,102,241,0.2);
+            color: #a5b4fc;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border: 1px solid rgba(99,102,241,0.15);
+        }
+        
+        .hero-name {
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin: 6px 0 2px;
+            background: linear-gradient(135deg, #ffffff 40%, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-username {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.95rem;
+        }
+        
+        .hero-bio {
+            color: rgba(255,255,255,0.7);
+            max-width: 500px;
+            margin: 12px auto 0;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            font-weight: 300;
+        }
+        
+        .hero-social a {
+            color: rgba(255,255,255,0.4);
+            font-size: 1.1rem;
+            transition: all 0.25s ease;
+            display: inline-block;
+        }
+        
+        .hero-social a:hover {
+            color: #ffffff;
+            transform: translateY(-3px);
+        }
+        
+        /* Section */
+        .section {
+            padding: 40px 0;
+        }
+        
+        .section:not(:last-child) {
+            border-bottom: 1px solid #f1f5f9;
         }
         
         .section-title {
-            border-bottom: 3px solid var(--primary-color);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #6366f1;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 20px;
+        }
+        
+        .section-title .line {
             display: inline-block;
+            width: 30px;
+            height: 2px;
+            background: #6366f1;
+            margin-right: 10px;
+            vertical-align: middle;
         }
         
-        .social-links a {
-            color: white;
-            margin: 0 10px;
-            font-size: 1.5rem;
-            transition: transform 0.3s, color 0.3s;
-            display: inline-block;
+        /* Skills */
+        .skill-item {
+            margin-bottom: 14px;
+        }
+        .skill-item .skill-label {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: #1e293b;
+        }
+        .skill-item .skill-value {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        .skill-item .progress {
+            height: 4px;
+            border-radius: 4px;
+            background: #f1f5f9;
+            margin-top: 4px;
+        }
+        .skill-item .progress-bar {
+            border-radius: 4px;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
         }
         
-        .social-links a:hover {
-            transform: scale(1.2) translateY(-3px);
-            color: #fff;
-        }
-        
+        /* Projects */
         .project-card {
-            transition: transform 0.3s, box-shadow 0.3s;
+            background: white;
+            border: 1px solid #f1f5f9;
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.3s ease;
             height: 100%;
         }
         
         .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: translateY(-6px);
+            border-color: #e2e8f0;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.06);
         }
         
-        .skill-bar {
-            margin-bottom: 15px;
+        .project-card .card-img-top {
+            height: 170px;
+            object-fit: cover;
+            background: #f8fafc;
         }
         
-        .skill-bar .progress {
-            height: 8px;
-            border-radius: 10px;
+        .project-card .card-body {
+            padding: 18px 20px 14px;
         }
         
-        .github-card {
-            background: #f6f8fa;
-            border: 1px solid #e1e4e8;
-            border-radius: 8px;
-            padding: 15px;
+        .project-card .card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+        
+        .project-card .card-text {
+            font-size: 0.75rem;
+            color: #64748b;
+            line-height: 1.6;
             margin-bottom: 10px;
-            transition: background 0.3s;
         }
         
-        .github-card:hover {
-            background: #f3f4f6;
+        .project-card .tech-tag {
+            font-size: 0.6rem;
+            padding: 3px 12px;
+            border-radius: 12px;
+            background: #f1f5f9;
+            color: #475569;
+            font-weight: 500;
         }
         
+        .project-card .card-footer {
+            background: transparent;
+            border-top: 1px solid #f1f5f9;
+            padding: 10px 20px 14px;
+        }
+        
+        .project-card .status-badge {
+            font-size: 0.6rem;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+        
+        .project-card .file-badge {
+            font-size: 0.6rem;
+            padding: 2px 10px;
+            border-radius: 12px;
+            background: #eef2ff;
+            color: #6366f1;
+            font-weight: 500;
+        }
+        
+        .project-card .btn-icon {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* GitHub */
         .github-stats {
             display: flex;
-            gap: 20px;
+            gap: 12px;
             flex-wrap: wrap;
         }
         
-        .github-stats .stat-item {
-            background: #f6f8fa;
-            padding: 10px 20px;
-            border-radius: 8px;
+        .github-stat {
+            background: white;
+            border: 1px solid #f1f5f9;
+            padding: 14px 24px;
+            border-radius: 12px;
             text-align: center;
             flex: 1;
             min-width: 80px;
         }
         
-        .github-stats .stat-item .number {
-            font-size: 1.5rem;
+        .github-stat .number {
+            font-size: 1.3rem;
             font-weight: 700;
-            color: var(--primary-color);
+            color: #0f172a;
         }
         
-        .file-badge {
-            background: #e3f2fd;
-            color: #0d6efd;
-            padding: 3px 10px;
+        .github-stat .label {
+            font-size: 0.6rem;
+            color: #94a3b8;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        
+        .github-repo {
+            background: white;
+            border: 1px solid #f1f5f9;
             border-radius: 12px;
-            font-size: 0.75rem;
+            padding: 14px 18px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
         }
         
-        .download-btn {
+        .github-repo:hover {
+            border-color: #e2e8f0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        }
+        
+        .github-repo .repo-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        
+        .github-repo .repo-desc {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+        
+        .github-repo .repo-meta {
+            font-size: 0.65rem;
+            color: #94a3b8;
+        }
+        
+        .github-repo .repo-lang {
+            font-size: 0.6rem;
             padding: 2px 10px;
+            border-radius: 12px;
+            background: #f1f5f9;
+            color: #475569;
+            font-weight: 500;
+        }
+        
+        /* Learning */
+        .learning-badge {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+            padding: 6px 16px;
+            border-radius: 20px;
             font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
         
+        /* Footer */
+        .footer {
+            border-top: 1px solid #f1f5f9;
+            padding: 30px 0;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+        
+        .footer a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            .portfolio-hero {
-                padding: 50px 0;
+            .hero {
+                padding: 50px 0 40px;
             }
-            .portfolio-hero .avatar {
-                width: 100px;
-                height: 100px;
+            .hero-name {
+                font-size: 1.8rem;
             }
-            .github-stats .stat-item {
+            .hero-avatar {
+                width: 85px;
+                height: 85px;
+            }
+            .github-stat {
+                padding: 10px 16px;
                 min-width: 60px;
-                padding: 8px 12px;
             }
-        }
-        
-        /* Dark mode support for portfolio */
-        @media (prefers-color-scheme: dark) {
-            body:not(.light-mode) .github-card {
-                background: #1a1a2e;
-                border-color: #2d2d44;
+            .github-stat .number {
+                font-size: 1rem;
             }
-            body:not(.light-mode) .github-stats .stat-item {
-                background: #1a1a2e;
-                border: 1px solid #2d2d44;
-            }
-            body:not(.light-mode) .file-badge {
-                background: #1a1a2e;
-                color: #6edff6;
+            .project-card .card-img-top {
+                height: 140px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Hero Section -->
-    <section class="portfolio-hero text-center">
-        <div class="container position-relative">
-            <img src="<?php echo BASE_URL; ?>uploads/profile/<?php echo $user['avatar'] ?? 'default-avatar.png'; ?>" 
-                 alt="Avatar" class="avatar rounded-circle mb-3">
-            <h1 class="display-4"><?php echo sanitizeOutput($user['full_name'] ?: $user['username']); ?></h1>
-            <p class="lead">@<?php echo sanitizeOutput($user['username']); ?></p>
-            <?php if ($user['bio']): ?>
-                <p class="mb-4" style="max-width: 600px; margin-left: auto; margin-right: auto;">
-                    <?php echo nl2br(sanitizeOutput($user['bio'])); ?>
-                </p>
+
+<!-- Hero Section -->
+<section class="hero text-center">
+    <div class="container">
+        <img src="<?php echo BASE_URL; ?>uploads/profile/<?php echo $user['avatar'] ?? 'default-avatar.png'; ?>" 
+             alt="Avatar" class="hero-avatar mb-3">
+        
+        <div class="badge-role mb-2">Developer Portfolio</div>
+        
+        <h1 class="hero-name"><?php echo sanitizeOutput($user['full_name'] ?: $user['username']); ?></h1>
+        <p class="hero-username">@<?php echo sanitizeOutput($user['username']); ?></p>
+        
+        <?php if ($user['bio']): ?>
+            <p class="hero-bio"><?php echo nl2br(sanitizeOutput($user['bio'])); ?></p>
+        <?php endif; ?>
+        
+        <div class="hero-social mt-3">
+            <?php if ($user['github_username']): ?>
+                <a href="https://github.com/<?php echo sanitizeOutput($user['github_username']); ?>" target="_blank" class="mx-2" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
             <?php endif; ?>
-            
-            <div class="social-links">
-                <?php if ($user['github_username']): ?>
-                    <a href="https://github.com/<?php echo sanitizeOutput($user['github_username']); ?>" target="_blank" title="GitHub">
-                        <i class="fab fa-github"></i>
-                    </a>
-                <?php endif; ?>
-                <?php if ($user['linkedin']): ?>
-                    <a href="<?php echo sanitizeOutput($user['linkedin']); ?>" target="_blank" title="LinkedIn">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                <?php endif; ?>
-                <?php if ($user['twitter']): ?>
-                    <a href="<?php echo sanitizeOutput($user['twitter']); ?>" target="_blank" title="Twitter">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                <?php endif; ?>
-                <?php if ($user['website']): ?>
-                    <a href="<?php echo sanitizeOutput($user['website']); ?>" target="_blank" title="Website">
-                        <i class="fas fa-globe"></i>
-                    </a>
-                <?php endif; ?>
-            </div>
+            <?php if ($user['linkedin']): ?>
+                <a href="<?php echo sanitizeOutput($user['linkedin']); ?>" target="_blank" class="mx-2" title="LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            <?php endif; ?>
+            <?php if ($user['twitter']): ?>
+                <a href="<?php echo sanitizeOutput($user['twitter']); ?>" target="_blank" class="mx-2" title="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+            <?php endif; ?>
+            <?php if ($user['website']): ?>
+                <a href="<?php echo sanitizeOutput($user['website']); ?>" target="_blank" class="mx-2" title="Website">
+                    <i class="fas fa-globe"></i>
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>
+
+<!-- Content -->
+<div class="container">
+
+    <!-- Skills -->
+    <?php if (!empty($skills)): ?>
+    <section class="section">
+        <div class="section-title">
+            <span class="line"></span>Skills & Expertise
+        </div>
+        <div class="row">
+            <?php foreach ($skills as $skill): ?>
+                <div class="col-md-6 skill-item">
+                    <div class="d-flex justify-content-between">
+                        <span class="skill-label">
+                            <?php if ($skill['icon']): ?>
+                                <i class="<?php echo $skill['icon']; ?> me-1" style="font-size: 0.75rem; color: #6366f1;"></i>
+                            <?php endif; ?>
+                            <?php echo sanitizeOutput($skill['name']); ?>
+                        </span>
+                        <span class="skill-value"><?php echo $skill['proficiency']; ?>%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: <?php echo $skill['proficiency']; ?>%;"></div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
     </section>
+    <?php endif; ?>
 
-    <div class="container">
-        <!-- Skills Section -->
-        <?php if (!empty($skills)): ?>
-        <section class="mb-5">
-            <h3 class="section-title"><i class="fas fa-code me-2"></i>Skills</h3>
-            <div class="row">
-                <?php foreach ($skills as $skill): ?>
-                    <div class="col-md-6 skill-bar">
-                        <div class="d-flex justify-content-between">
-                            <span>
-                                <?php if ($skill['icon']): ?>
-                                    <i class="<?php echo $skill['icon']; ?> me-1"></i>
-                                <?php endif; ?>
-                                <?php echo sanitizeOutput($skill['name']); ?>
-                            </span>
-                            <span><?php echo $skill['proficiency']; ?>%</span>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar bg-<?php echo getProgressColor($skill['proficiency']); ?>" 
-                                 style="width: <?php echo $skill['proficiency']; ?>%">
+    <!-- Projects -->
+    <?php if (!empty($projects)): ?>
+    <section class="section">
+        <div class="section-title">
+            <span class="line"></span>Featured Projects
+            <span style="font-size: 0.65rem; color: #94a3b8; font-weight: 400; text-transform: none; letter-spacing: 0;">
+                (<?php echo count($projects); ?>)
+            </span>
+        </div>
+        <div class="row g-3">
+            <?php foreach ($projects as $project): ?>
+                <div class="col-md-6 col-lg-4">
+                    <div class="project-card">
+                        <?php if ($project['image']): ?>
+                            <img src="<?php echo BASE_URL; ?>uploads/projects/<?php echo $project['image']; ?>" 
+                                 class="card-img-top" alt="<?php echo sanitizeOutput($project['title']); ?>">
+                        <?php else: ?>
+                            <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 170px; background: #f8fafc;">
+                                <i class="fas fa-folder-open" style="font-size: 2.5rem; color: #cbd5e1;"></i>
                             </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </section>
-        <?php endif; ?>
-
-        <!-- Projects Section -->
-        <?php if (!empty($projects)): ?>
-        <section class="mb-5">
-            <h3 class="section-title"><i class="fas fa-folder me-2"></i>Projects (<?php echo count($projects); ?>)</h3>
-            <div class="row g-4">
-                <?php foreach ($projects as $project): ?>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card project-card h-100">
-                            <?php if ($project['image']): ?>
-                                <img src="<?php echo BASE_URL; ?>uploads/projects/<?php echo $project['image']; ?>" 
-                                     class="card-img-top" alt="<?php echo sanitizeOutput($project['title']); ?>" 
-                                     style="height: 200px; object-fit: cover;">
-                            <?php else: ?>
-                                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
-                                    <i class="fas fa-folder fa-5x text-white-50"></i>
-                                </div>
+                        <?php endif; ?>
+                        <div class="card-body">
+                            <h6 class="card-title"><?php echo sanitizeOutput($project['title']); ?></h6>
+                            <?php if ($project['description']): ?>
+                                <p class="card-text"><?php echo substr(sanitizeOutput($project['description']), 0, 75); ?></p>
                             <?php endif; ?>
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo sanitizeOutput($project['title']); ?></h5>
-                                <?php if ($project['description']): ?>
-                                    <p class="card-text text-muted small">
-                                        <?php echo substr(sanitizeOutput($project['description']), 0, 120); ?>
-                                        <?php if (strlen($project['description']) > 120): ?>...<?php endif; ?>
-                                    </p>
-                                <?php endif; ?>
-                                <?php if ($project['technologies']): ?>
-                                    <div class="mb-2">
-                                        <?php 
-                                            $techs = explode(',', $project['technologies']);
-                                            $displayTechs = array_slice($techs, 0, 3);
-                                            foreach ($displayTechs as $tech):
-                                        ?>
-                                            <span class="badge bg-info"><?php echo trim(sanitizeOutput($tech)); ?></span>
-                                        <?php endforeach; ?>
-                                        <?php if (count($techs) > 3): ?>
-                                            <span class="badge bg-secondary">+<?php echo count($techs) - 3; ?></span>
-                                        <?php endif; ?>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <!-- File Badge -->
-                                <?php if ($project['file_path']): ?>
-                                    <div class="mt-2">
-                                        <span class="file-badge">
-                                            <i class="fas fa-file-archive me-1"></i> Files Available
-                                        </span>
-                                        <?php if ($project['allow_download']): ?>
-                                            <a href="<?php echo BASE_URL; ?>projects/download.php?project=<?php echo $project['id']; ?>" 
-                                               class="btn btn-sm btn-success download-btn" target="_blank">
-                                                <i class="fas fa-download"></i>
-                                            </a>
-                                        <?php endif; ?>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                            <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
-                                <span class="badge bg-<?php echo getStatusBadge($project['status']); ?>">
-                                    <?php echo str_replace('-', ' ', $project['status']); ?>
-                                </span>
-                                <?php if ($project['github_url'] || $project['demo_url']): ?>
-                                    <div>
-                                        <?php if ($project['github_url']): ?>
-                                            <a href="<?php echo sanitizeOutput($project['github_url']); ?>" target="_blank" class="btn btn-dark btn-sm">
-                                                <i class="fab fa-github"></i>
-                                            </a>
-                                        <?php endif; ?>
-                                        <?php if ($project['demo_url']): ?>
-                                            <a href="<?php echo sanitizeOutput($project['demo_url']); ?>" target="_blank" class="btn btn-success btn-sm">
-                                                <i class="fas fa-external-link-alt"></i>
-                                            </a>
-                                        <?php endif; ?>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </section>
-        <?php endif; ?>
-
-        <!-- GitHub Section -->
-        <?php if ($github && $github['repo_data']): ?>
-        <section class="mb-5">
-            <h3 class="section-title"><i class="fab fa-github me-2"></i>GitHub Activity</h3>
-            
-            <!-- GitHub Stats -->
-            <div class="github-stats mb-4">
-                <div class="stat-item">
-                    <div class="number"><?php echo $github['followers_count']; ?></div>
-                    <small class="text-muted">Followers</small>
-                </div>
-                <div class="stat-item">
-                    <div class="number"><?php echo $github['following_count']; ?></div>
-                    <small class="text-muted">Following</small>
-                </div>
-                <div class="stat-item">
-                    <div class="number"><?php echo $github['public_repos']; ?></div>
-                    <small class="text-muted">Repositories</small>
-                </div>
-            </div>
-            
-            <?php 
-                $repos = json_decode($github['repo_data'], true);
-                if ($repos && is_array($repos)):
-            ?>
-                <div class="row">
-                    <?php foreach (array_slice($repos, 0, 6) as $repo): ?>
-                        <div class="col-md-6">
-                            <a href="<?php echo sanitizeOutput($repo['html_url']); ?>" target="_blank" class="text-decoration-none">
-                                <div class="github-card">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <strong><?php echo sanitizeOutput($repo['name']); ?></strong>
-                                            <?php if ($repo['description']): ?>
-                                                <br>
-                                                <small class="text-muted"><?php echo substr(sanitizeOutput($repo['description']), 0, 60); ?></small>
-                                            <?php endif; ?>
-                                        </div>
-                                        <?php if ($repo['stargazers_count'] > 0): ?>
-                                            <span class="badge bg-warning text-dark">
-                                                <i class="fas fa-star"></i> <?php echo $repo['stargazers_count']; ?>
-                                            </span>
-                                        <?php endif; ?>
-                                    </div>
-                                    <?php if ($repo['language']): ?>
-                                        <div class="mt-1">
-                                            <span class="badge bg-secondary"><?php echo sanitizeOutput($repo['language']); ?></span>
-                                        </div>
+                            <?php if ($project['technologies']): ?>
+                                <div class="d-flex flex-wrap gap-1">
+                                    <?php 
+                                        $techs = explode(',', $project['technologies']);
+                                        foreach (array_slice($techs, 0, 4) as $tech):
+                                    ?>
+                                        <span class="tech-tag"><?php echo trim(sanitizeOutput($tech)); ?></span>
+                                    <?php endforeach; ?>
+                                    <?php if (count($techs) > 4): ?>
+                                        <span class="tech-tag">+<?php echo count($techs) - 4; ?></span>
                                     <?php endif; ?>
                                 </div>
-                            </a>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </section>
-        <?php endif; ?>
-
-        <!-- Learning Journey -->
-        <?php if (!empty($goals)): ?>
-        <section class="mb-5">
-            <h3 class="section-title"><i class="fas fa-graduation-cap me-2"></i>Learning Journey</h3>
-            <div class="row g-3">
-                <?php foreach ($goals as $goal): ?>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h6 class="card-title"><?php echo sanitizeOutput($goal['title']); ?></h6>
-                                <?php if ($goal['description']): ?>
-                                    <p class="card-text small text-muted">
-                                        <?php echo substr(sanitizeOutput($goal['description']), 0, 80); ?>
-                                    </p>
-                                <?php endif; ?>
-                                <div class="progress">
-                                    <div class="progress-bar bg-success" style="width: 100%">
-                                        <i class="fas fa-check me-1"></i> Completed
-                                    </div>
+                            <?php endif; ?>
+                            <?php if ($project['file_path']): ?>
+                                <div class="mt-2">
+                                    <span class="file-badge">
+                                        <i class="fas fa-paperclip me-1"></i> Files
+                                    </span>
+                                    <?php if ($project['allow_download']): ?>
+                                        <a href="<?php echo BASE_URL; ?>projects/download.php?project=<?php echo $project['id']; ?>" 
+                                           class="btn btn-sm btn-outline-primary ms-1" style="padding: 0 8px; font-size: 0.6rem; border-radius: 6px;" target="_blank">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    <?php endif; ?>
                                 </div>
-                                <?php if ($goal['completed_at']): ?>
-                                    <small class="text-muted">Completed: <?php echo formatDate($goal['completed_at']); ?></small>
+                            <?php endif; ?>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <span class="status-badge bg-<?php echo getStatusBadge($project['status']); ?> text-white">
+                                <?php echo str_replace('-', ' ', $project['status']); ?>
+                            </span>
+                            <div class="d-flex gap-1">
+                                <?php if ($project['github_url']): ?>
+                                    <a href="<?php echo sanitizeOutput($project['github_url']); ?>" target="_blank" 
+                                       class="btn btn-sm btn-dark btn-icon">
+                                        <i class="fab fa-github"></i>
+                                    </a>
+                                <?php endif; ?>
+                                <?php if ($project['demo_url']): ?>
+                                    <a href="<?php echo sanitizeOutput($project['demo_url']); ?>" target="_blank" 
+                                       class="btn btn-sm btn-success btn-icon">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </a>
                                 <?php endif; ?>
                             </div>
                         </div>
                     </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </section>
+    <?php endif; ?>
+
+    <!-- GitHub -->
+    <?php if ($github && $github['repo_data']): 
+        $repos = json_decode($github['repo_data'], true);
+    ?>
+    <section class="section">
+        <div class="section-title">
+            <span class="line"></span>GitHub Activity
+        </div>
+        
+        <div class="github-stats mb-3">
+            <div class="github-stat">
+                <div class="number"><?php echo $github['followers_count']; ?></div>
+                <div class="label">Followers</div>
+            </div>
+            <div class="github-stat">
+                <div class="number"><?php echo $github['following_count']; ?></div>
+                <div class="label">Following</div>
+            </div>
+            <div class="github-stat">
+                <div class="number"><?php echo $github['public_repos']; ?></div>
+                <div class="label">Repositories</div>
+            </div>
+        </div>
+        
+        <?php if ($repos && is_array($repos)): ?>
+            <div class="row">
+                <?php foreach (array_slice($repos, 0, 6) as $repo): ?>
+                    <div class="col-md-6">
+                        <a href="<?php echo sanitizeOutput($repo['html_url']); ?>" target="_blank" class="github-repo">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <span class="repo-name"><?php echo sanitizeOutput($repo['name']); ?></span>
+                                    <?php if ($repo['description']): ?>
+                                        <div class="repo-desc"><?php echo substr(sanitizeOutput($repo['description']), 0, 60); ?></div>
+                                    <?php endif; ?>
+                                </div>
+                                <?php if ($repo['stargazers_count'] > 0): ?>
+                                    <span class="repo-meta">
+                                        <i class="fas fa-star" style="color: #f59e0b;"></i> <?php echo $repo['stargazers_count']; ?>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                            <?php if ($repo['language']): ?>
+                                <span class="repo-lang mt-1"><?php echo sanitizeOutput($repo['language']); ?></span>
+                            <?php endif; ?>
+                        </a>
+                    </div>
                 <?php endforeach; ?>
             </div>
-        </section>
         <?php endif; ?>
+    </section>
+    <?php endif; ?>
 
-        <!-- Footer -->
-        <footer class="text-center text-muted py-4 border-top">
-            <p class="mb-0">
-                &copy; <?php echo date('Y'); ?> <?php echo sanitizeOutput($user['full_name'] ?: $user['username']); ?>. 
-                Built with <i class="fas fa-heart text-danger"></i> using <a href="<?php echo BASE_URL; ?>" class="text-decoration-none">DevTrack</a>
-            </p>
-        </footer>
+    <!-- Learning -->
+    <?php if (!empty($goals)): ?>
+    <section class="section">
+        <div class="section-title">
+            <span class="line"></span>Learning Journey
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <?php foreach ($goals as $goal): ?>
+                <span class="learning-badge">
+                    <i class="fas fa-check-circle" style="font-size: 0.7rem;"></i>
+                    <?php echo sanitizeOutput($goal['title']); ?>
+                </span>
+            <?php endforeach; ?>
+        </div>
+    </section>
+    <?php endif; ?>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <div class="container">
+        <p class="mb-0">
+            &copy; <?php echo date('Y'); ?> <?php echo sanitizeOutput($user['full_name'] ?: $user['username']); ?> &middot;
+            Built with <i class="fas fa-heart" style="color: #ef4444; font-size: 0.75rem;"></i> using 
+            <a href="<?php echo BASE_URL; ?>">DevTrack</a>
+        </p>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Apply dark mode based on system preference -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Check if user has theme preference in localStorage
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark-mode');
-        } else if (savedTheme === 'light') {
-            document.body.classList.add('light-mode');
-        } else {
-            // Check system preference
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.body.classList.add('dark-mode');
-            }
-        }
-    });
-    </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
