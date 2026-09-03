@@ -1,0 +1,49 @@
+# DevTrack .gitignore
+
+# XAMPP/Server specific
+*.log
+error_log
+access_log
+
+# Uploaded files (keep structure, ignore content)
+uploads/
+!uploads/.gitkeep
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# PHP error logs
+*.log
+
+# Session files (if stored in project)
+sessions/
+!sessions/.gitkeep
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Composer (if used later)
+vendor/
+composer.lock
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Database backups
+*.sql
+*.sql.gz
+
+# Node modules (if any frontend tools)
+node_modules/
