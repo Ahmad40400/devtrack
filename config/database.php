@@ -33,6 +33,10 @@ function fetchOne($sql, $params = []) {
     return query($sql, $params)->fetch();
 }
 
+function fetchColumn($sql, $params = []) {
+    return query($sql, $params)->fetchColumn();
+}
+
 function insert($sql, $params = []) {
     query($sql, $params);
     global $pdo;
@@ -45,5 +49,20 @@ function update($sql, $params = []) {
 
 function delete($sql, $params = []) {
     return query($sql, $params)->rowCount();
+}
+
+function beginTransaction() {
+    global $pdo;
+    return $pdo->beginTransaction();
+}
+
+function commitTransaction() {
+    global $pdo;
+    return $pdo->commit();
+}
+
+function rollbackTransaction() {
+    global $pdo;
+    return $pdo->rollBack();
 }
 ?>

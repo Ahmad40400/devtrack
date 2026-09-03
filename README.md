@@ -1,41 +1,137 @@
-# DevTrack — Developer Productivity & Portfolio Platform
+# DevTrack - Developer Productivity & Portfolio Platform
 
-> A full-stack web application for developers to track productivity, manage projects, and showcase their portfolio.
+## 🚀 Quick Start
 
-## 🚀 Features
+1. Clone or download to `htdocs/devtrack/`
+2. Import `database.sql` in phpMyAdmin
+3. Configure `config/database.php` with your MySQL credentials
+4. Access `http://localhost/devtrack/`
+5. Default admin: `admin@devtrack.com` / `admin123`
 
-- **Authentication**: Secure login/register with role-based access
-- **Dashboard**: Modern dashboard with productivity analytics
-- **Project Management**: Full CRUD with image upload
-- **Task Management**: Priority, status, filtering, and search
-- **Skills Management**: Track skills with proficiency levels
-- **Learning Goals**: Set and track learning objectives
-- **GitHub Integration**: Fetch public GitHub profile data
-- **User Profile**: Customizable developer profile
-- **Public Portfolio**: Professional portfolio page
-- **Analytics**: Visual statistics and charts
-- **Notifications**: Internal notification system
-- **Admin Panel**: Full administrative control
-- **Dark/Light Mode**: User preference with localStorage
+## 📚 Features
 
-## 🛠️ Tech Stack
+### Core Features
 
-- **Frontend**: HTML5, CSS3, JavaScript, Bootstrap 5
-- **Backend**: PHP 8+
-- **Database**: MySQL with PDO
-- **Server**: Apache (XAMPP compatible)
+- 🔐 **Authentication**: Secure registration, login, logout with password hashing
+- 📊 **Dashboard**: Interactive dashboard with statistics and charts
+- 📁 **Projects**: Full CRUD with image upload and status tracking
+- ✅ **Tasks**: Complete task management with priorities and deadlines
+- 🛠️ **Skills**: Track skills with proficiency levels and progress bars
+- 🎯 **Learning**: Set learning goals with progress tracking
+- 🐙 **GitHub**: Integrate GitHub profile and repositories
+- 👤 **Profile**: Customizable developer profile
+- 🌐 **Portfolio**: Public portfolio page for showcasing work
+- 📈 **Analytics**: Detailed analytics with charts and insights
+- 🔔 **Notifications**: Internal notification system
+- 👑 **Admin**: Admin panel for user management
 
-## 📦 Installation
+### UI/UX
 
-### Prerequisites
+- 🎨 **Dark/Light Mode**: Toggle between themes
+- 📱 **Responsive**: Works on all devices
+- 🔍 **Search & Filter**: Find projects and tasks easily
+- 📄 **Pagination**: Handle large datasets efficiently
 
-- XAMPP (Apache + MySQL + PHP)
-- Git (optional)
+## 🔐 Security Features
 
-### Steps
+- PDO Prepared Statements (SQL Injection Prevention)
+- Password Hashing with bcrypt
+- CSRF Protection on all forms
+- XSS Prevention with htmlspecialchars()
+- Session Security with HttpOnly cookies
+- Input Validation and Sanitization
+- Rate Limiting for login attempts
+- Secure File Uploads with validation
 
-1. **Clone or Download** the repository
+## 📁 Project Structure
 
-```bash
-git clone https://github.com/yourusername/devtrack.git
+devtrack/
+├── admin/ # Admin panel
+├── analytics/ # Analytics page
+├── api/ # API endpoints
+├── assets/ # CSS, JS, images
+├── auth/ # Authentication
+├── config/ # Configuration
+├── dashboard/ # User dashboard
+├── github/ # GitHub integration
+├── includes/ # Core includes
+├── learning/ # Learning roadmap
+├── portfolio/ # Public portfolio
+├── profile/ # User profile
+├── projects/ # Project management
+├── skills/ # Skills management
+├── tasks/ # Task management
+├── uploads/ # File uploads
+├── .htaccess # Security rules
+├── config.php # Main configuration
+├── index.php # Entry point
+├── login.php # Login page
+├── register.php # Registration page
+├── logout.php # Logout
+├── notifications.php # Notifications
+├── 404.php # Error page
+└── README.md # Documentation
+
+## 🧪 Testing
+
+### Test Credentials
+
+- **Admin**: admin@devtrack.com / admin123
+- **User**: Register a new account
+
+### Testing URLs
+
+- Home: `http://localhost/devtrack/`
+- Login: `http://localhost/devtrack/login.php`
+- Register: `http://localhost/devtrack/register.php`
+- Dashboard: `http://localhost/devtrack/dashboard/`
+- Portfolio: `http://localhost/devtrack/portfolio/?username=yourusername`
+
+## 📝 Development Roadmap
+
+### Phase 1: Foundation ✅
+
+- Database Schema & Setup
+- Authentication System
+- Dashboard
+- Project Management
+- Task Management
+- Skills Management
+
+### Phase 2: Advanced Features ✅
+
+- Learning Roadmap
+- GitHub Integration
+- Developer Profile
+- Public Portfolio
+- Search & Filtering
+- Dark/Light Mode
+
+### Phase 3: Admin & Analytics ✅
+
+- Admin Panel
+- User Management
+- System Activity
+- Notifications System
+- Analytics & Statistics
+
+### Phase 4: Polish & Optimization ✅
+
+- Security Enhancements
+- Performance Optimization
+- Error Handling
+- Documentation
+- UI/UX Improvements
+
+## 🔧 Configuration
+
+### Database
+
+Update `config/database.php`:
+
+```php
+$db_host = 'localhost';
+$db_name = 'devtrack';
+$db_user = 'root';
+$db_pass = '';
 ```

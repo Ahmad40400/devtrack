@@ -18,9 +18,12 @@ define('APP_VERSION', '1.0.0');
 define('BASE_URL', 'http://localhost/devtrack/');
 define('UPLOAD_PATH', __DIR__ . '/uploads/');
 define('MAX_FILE_SIZE', 5 * 1024 * 1024); // 5MB
+define('SITE_NAME', 'DevTrack');
 
-// Start session
-session_start();
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Include core files
 require_once __DIR__ . '/config/database.php';
@@ -32,4 +35,7 @@ require_once __DIR__ . '/includes/auth.php';
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
+
+// Set timezone
+date_default_timezone_set('Asia/Karachi');
 ?>

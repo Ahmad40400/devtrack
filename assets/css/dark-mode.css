@@ -1,0 +1,138 @@
+/* ============================================
+   Dark Mode Styles
+   ============================================ */
+
+body.dark-mode {
+  background-color: #1a1a2e;
+  color: #e0e0e0;
+}
+
+body.dark-mode .sidebar {
+  background-color: #16213e;
+}
+
+body.dark-mode .sidebar .nav-link {
+  color: #b0b0b0;
+}
+
+body.dark-mode .sidebar .nav-link:hover {
+  background-color: #1a1a2e;
+}
+
+body.dark-mode .sidebar .nav-link.active {
+  background-color: #0d6efd;
+  color: white;
+}
+
+body.dark-mode .card {
+  background-color: #16213e;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .card-header {
+  border-bottom-color: #1a1a2e;
+}
+
+body.dark-mode .table {
+  color: #e0e0e0;
+}
+
+body.dark-mode .table td,
+body.dark-mode .table th {
+  border-color: #1a1a2e;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+  background-color: #1a1a2e;
+  color: #e0e0e0;
+  border-color: #2d2d44;
+}
+
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+  background-color: #1a1a2e;
+  color: #e0e0e0;
+}
+
+body.dark-mode .text-muted {
+  color: #8a8a8a !important;
+}
+
+body.dark-mode .bg-light {
+  background-color: #16213e !important;
+}
+
+body.dark-mode .list-group-item {
+  background-color: #16213e;
+  color: #e0e0e0;
+  border-color: #1a1a2e;
+}
+
+body.dark-mode .list-group-item:hover {
+  background-color: #1a1a2e;
+}
+
+body.dark-mode .navbar.bg-dark {
+  background-color: #0f0f1a !important;
+}
+
+body.dark-mode .progress {
+  background-color: #1a1a2e;
+}
+
+body.dark-mode .dropdown-menu {
+  background-color: #16213e;
+  border-color: #1a1a2e;
+}
+
+body.dark-mode .dropdown-item {
+  color: #e0e0e0;
+}
+
+body.dark-mode .dropdown-item:hover {
+  background-color: #1a1a2e;
+  color: white;
+}
+
+body.dark-mode .modal-content {
+  background-color: #16213e;
+  border-color: #1a1a2e;
+}
+
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer {
+  border-color: #1a1a2e;
+}
+
+body.dark-mode .close {
+  color: #e0e0e0;
+}
+
+body.dark-mode .alert {
+  border-color: transparent;
+}
+
+body.dark-mode .alert-success {
+  background-color: #0d6efd20;
+  color: #75b798;
+}
+
+body.dark-mode .alert-danger {
+  background-color: #dc354520;
+  color: #ea868f;
+}
+
+body.dark-mode .alert-warning {
+  background-color: #ffc10720;
+  color: #ffda6a;
+}
+
+body.dark-mode .alert-info {
+  background-color: #0dcaf020;
+  color: #6edff6;
+}
+
+body.dark-mode .stats-card {
+  border-color: #0d6efd;
+}
