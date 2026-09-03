@@ -1,23 +1,21 @@
 <?php
-// =============================================
-// Logout Page
-// =============================================
+require_once __DIR__ . '/config.php';
 
-require_once 'config.php';
-
-// Check if user is logged in
+// Logout user
 if (isAuthenticated()) {
-    // Log the logout activity before destroying session
-    logActivity($_SESSION['user_id'], 'logout', 'User logged out');
+    // ✅ FIX: Logout se pehle user exist karta hai ya nahi check karein
+    $userId = $_SESSION['user_id'];
+    $userExists = fetchOne("SELECT id FROM users WHERE id = ?", [$userId]);
     
-    // Store username for message
-    $username = $_SESSION['username'] ?? 'User';
+    if ($userExists) {
+        logActivity($userId, 'logout', 'User logged out');
+    }
 }
 
-// Clear all session variables
-$_SESSION = array();
+// Unset all session variables
+$_SESSION = [];
 
-// Destroy the session cookie
+// Destroy session
 if (ini_get('session.use_cookies')) {
     $params = session_get_cookie_params();
     setcookie(
@@ -31,17 +29,8 @@ if (ini_get('session.use_cookies')) {
     );
 }
 
-// Destroy the session
 session_destroy();
 
-// Regenerate session ID for security (start new session for messages)
-session_start();
-session_regenerate_id(true);
-
-// Set success message
-$_SESSION['logout_success'] = 'You have been logged out successfully.';
-
-// Redirect to login page with success message
-header('Location: ' . BASE_URL . 'login.php?logout=success');
+// Redirect to login page
+header('Location: ' . BASE_URL . 'login.php');
 exit();
-?>
