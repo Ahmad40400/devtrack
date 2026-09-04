@@ -370,4 +370,277 @@ include_once '../includes/header.php';
     </div>
 </div>
 
+<!-- ============================================ -->
+<!-- FLOATING AI BUTTON (Bottom Right) -->
+<!-- ============================================ -->
+<button id="aiFloatingBtn" onclick="toggleAIPanel()" 
+        style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; border-radius: 50%; 
+               background: linear-gradient(135deg, #6366f1, #a855f7); border: none; box-shadow: 0 8px 30px rgba(99,102,241,0.4); 
+               z-index: 9999; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;">
+    <i class="fas fa-robot text-white" style="font-size: 1.4rem;"></i>
+</button>
+
+<!-- AI PANEL (Slide-in from Right - Mobile Friendly) -->
+<div id="aiPanel" 
+     style="position: fixed; top: 0; right: -100%; width: 100%; max-width: 420px; height: 100vh; background: #ffffff; 
+            box-shadow: -10px 0 40px rgba(0,0,0,0.15); z-index: 9998; transition: right 0.3s ease; 
+            display: flex; flex-direction: column;">
+    
+    <!-- Panel Header -->
+    <div class="p-3 d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #6366f1, #a855f7); flex-shrink: 0;">
+        <div class="d-flex align-items-center">
+            <div class="rounded-circle p-1 me-2" style="background: rgba(255,255,255,0.2); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-robot text-white" style="font-size: 1rem;"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold text-white mb-0" style="font-size: 0.95rem;">AI Assistant</h6>
+                <small class="text-white-50" style="font-size: 0.7rem;">Always here to help</small>
+            </div>
+        </div>
+        <button onclick="toggleAIPanel()" class="btn btn-sm text-white p-0" style="font-size: 1.5rem; background: transparent; border: none;">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    
+    <!-- Chat Container -->
+    <div id="aiChatContainer" class="flex-grow-1 p-3" style="overflow-y: auto; background: #f8fafc;">
+        <div class="ai-message ai-bot mb-2">
+            <div class="d-flex align-items-start">
+                <div class="rounded-circle p-1 me-2" style="background: rgba(99,102,241,0.1); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fas fa-robot" style="font-size: 0.7rem; color: #6366f1;"></i>
+                </div>
+                <div class="bg-white rounded p-2 px-3" style="border-radius: 12px 12px 12px 4px !important; font-size: 0.82rem; color: #334155; max-width: 85%; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                    👋 Hi! I'm your AI Assistant. I can help you:
+                    <br><br>
+                    📁 <strong>Create Project</strong> - "create project MyApp"
+                    <br>
+                    ✅ <strong>Add Task</strong> - "add task Fix bug"
+                    <br>
+                    🏷️ <strong>Add Skill</strong> - "add skill PHP"
+                    <br>
+                    📚 <strong>Create Learning Goal</strong> - "create goal Learn React"
+                    <br>
+                    📊 <strong>Get Stats</strong> - "show my stats"
+                    <br><br>
+                    Try it now! 🚀
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Commands -->
+    <div class="p-2" style="background: white; border-top: 1px solid #f1f5f9; flex-shrink: 0;">
+        <div class="d-flex flex-wrap gap-1 justify-content-center">
+            <button class="btn btn-sm btn-outline-primary px-2 py-1" onclick="setAICommand('create project ')" style="font-size: 0.7rem; border-radius: 8px;">📁 Project</button>
+            <button class="btn btn-sm btn-outline-success px-2 py-1" onclick="setAICommand('add task ')" style="font-size: 0.7rem; border-radius: 8px;">✅ Task</button>
+            <button class="btn btn-sm btn-outline-info px-2 py-1" onclick="setAICommand('add skill ')" style="font-size: 0.7rem; border-radius: 8px;">🏷️ Skill</button>
+            <button class="btn btn-sm btn-outline-warning px-2 py-1" onclick="setAICommand('create goal ')" style="font-size: 0.7rem; border-radius: 8px;">📚 Goal</button>
+            <button class="btn btn-sm btn-outline-secondary px-2 py-1" onclick="setAICommand('show my stats')" style="font-size: 0.7rem; border-radius: 8px;">📊 Stats</button>
+        </div>
+    </div>
+    
+    <!-- Input -->
+    <div class="p-2" style="background: white; border-top: 1px solid #f1f5f9; flex-shrink: 0;">
+        <div class="input-group">
+            <input type="text" id="aiCommandInput" class="form-control" 
+                   placeholder="Type command..."
+                   style="border-radius: 10px 0 0 10px; border: 1px solid #e2e8f0; font-size: 0.82rem; padding: 10px 12px;"
+                   onkeypress="if(event.key==='Enter') processAICommand()">
+            <button class="btn btn-primary" onclick="processAICommand()" 
+                    style="border-radius: 0 10px 10px 0; background: #6366f1; border: none; padding: 10px 16px;">
+                <i class="fas fa-paper-plane" style="font-size: 0.85rem;"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- AI Processing Modal -->
+<div class="modal fade" id="aiProcessingModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px; border: none;">
+            <div class="modal-body text-center p-4">
+                <div class="spinner-border mb-3" style="color: #6366f1; width: 50px; height: 50px;"></div>
+                <h6 class="fw-bold mb-1" style="color: #1e293b;">Processing...</h6>
+                <p class="text-muted small mb-0">AI is working on your command</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* AI Chat Styles */
+.ai-message {
+    display: flex;
+    margin-bottom: 12px;
+}
+
+.ai-bot {
+    justify-content: flex-start;
+}
+
+.ai-user {
+    justify-content: flex-end;
+}
+
+.ai-user .bg-white {
+    background: #6366f1 !important;
+    color: white !important;
+    border-radius: 12px 12px 4px 12px !important;
+    box-shadow: 0 2px 8px rgba(99,102,241,0.3) !important;
+}
+
+/* Scrollbar */
+#aiChatContainer::-webkit-scrollbar {
+    width: 6px;
+}
+
+#aiChatContainer::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+#aiChatContainer::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+#aiChatContainer::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Floating button hover */
+#aiFloatingBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 40px rgba(99,102,241,0.5);
+}
+
+/* Panel responsive - Mobile Full Screen */
+@media (max-width: 576px) {
+    #aiPanel {
+        width: 100%;
+        max-width: 100%;
+        right: -100%;
+    }
+    
+    #aiFloatingBtn {
+        bottom: 16px;
+        right: 16px;
+        width: 55px;
+        height: 55px;
+    }
+    
+    #aiFloatingBtn i {
+        font-size: 1.2rem;
+    }
+}
+</style>
+
+<script>
+// ============================================
+// AI PANEL TOGGLE
+// ============================================
+
+function toggleAIPanel() {
+    const panel = document.getElementById('aiPanel');
+    
+    if (panel.style.right === '-100%' || panel.style.right === '' || panel.style.right === '-420px') {
+        panel.style.right = '0';
+    } else {
+        panel.style.right = '-100%';
+    }
+}
+
+// ============================================
+// AI ASSISTANT LOGIC
+// ============================================
+
+function setAICommand(text) {
+    document.getElementById('aiCommandInput').value = text;
+    document.getElementById('aiCommandInput').focus();
+}
+
+function addAIMessage(message, isUser) {
+    const container = document.getElementById('aiChatContainer');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'ai-message ' + (isUser ? 'ai-user' : 'ai-bot');
+    
+    if (isUser) {
+        msgDiv.innerHTML = `
+            <div class="bg-white rounded p-2 px-3" style="font-size: 0.82rem; max-width: 85%; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                ${message}
+            </div>
+        `;
+    } else {
+        msgDiv.innerHTML = `
+            <div class="d-flex align-items-start">
+                <div class="rounded-circle p-1 me-2" style="background: rgba(99,102,241,0.1); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fas fa-robot" style="font-size: 0.7rem; color: #6366f1;"></i>
+                </div>
+                <div class="bg-white rounded p-2 px-3" style="border-radius: 12px 12px 12px 4px !important; font-size: 0.82rem; color: #334155; max-width: 85%; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                    ${message}
+                </div>
+            </div>
+        `;
+    }
+    
+    container.appendChild(msgDiv);
+    container.scrollTop = container.scrollHeight;
+}
+
+function showAIProcessing() {
+    const modal = new bootstrap.Modal(document.getElementById('aiProcessingModal'));
+    modal.show();
+}
+
+function hideAIProcessing() {
+    const modalEl = document.getElementById('aiProcessingModal');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if (modal) modal.hide();
+}
+
+function processAICommand() {
+    const input = document.getElementById('aiCommandInput');
+    const command = input.value.trim();
+    
+    if (!command) return;
+    
+    // Add user message
+    addAIMessage(command, true);
+    input.value = '';
+    
+    // Show processing
+    showAIProcessing();
+    
+    // Send to backend
+    const formData = new FormData();
+    formData.append('ai_command', command);
+    formData.append('csrf_token', '<?php echo generateCSRFToken(); ?>');
+    
+    fetch('<?php echo BASE_URL; ?>dashboard/ai_assistant.php', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideAIProcessing();
+        addAIMessage(data.message, false);
+        
+        // If action was successful, reload page after 2 seconds
+        if (data.success && data.reload) {
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        }
+    })
+    .catch(error => {
+        hideAIProcessing();
+        addAIMessage('❌ Sorry, something went wrong. Please try again.', false);
+        console.error('Error:', error);
+    });
+}
+</script>
+
 <?php include_once '../includes/footer.php'; ?>
