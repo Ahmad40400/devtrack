@@ -37,6 +37,12 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Include core files
+require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/includes/security.php';
+require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/includes/auth.php';
+
 // CSRF token generation
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
