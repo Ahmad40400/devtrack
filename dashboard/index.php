@@ -380,11 +380,11 @@ include_once '../includes/header.php';
     <i class="fas fa-robot text-white" style="font-size: 1.4rem;"></i>
 </button>
 
-<!-- AI PANEL (Slide-in from Right - Mobile Friendly) -->
+<!-- AI PANEL (Slide-in from Right - Mobile Perfect) -->
 <div id="aiPanel" 
-     style="position: fixed; top: 0; right: -100%; width: 100%; max-width: 420px; height: 100vh; background: #ffffff; 
+     style="position: fixed; top: 0; right: -100%; width: 100%; max-width: 420px; height: 100dvh; background: #ffffff; 
             box-shadow: -10px 0 40px rgba(0,0,0,0.15); z-index: 9998; transition: right 0.3s ease; 
-            display: flex; flex-direction: column;">
+            display: flex; flex-direction: column; overflow: hidden;">
     
     <!-- Panel Header -->
     <div class="p-3 d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #6366f1, #a855f7); flex-shrink: 0;">
@@ -402,8 +402,8 @@ include_once '../includes/header.php';
         </button>
     </div>
     
-    <!-- Chat Container -->
-    <div id="aiChatContainer" class="flex-grow-1 p-3" style="overflow-y: auto; background: #f8fafc;">
+    <!-- Chat Container (Flex Grow - Scrollable) -->
+    <div id="aiChatContainer" class="flex-grow-1 p-3" style="overflow-y: auto; background: #f8fafc; min-height: 0;">
         <div class="ai-message ai-bot mb-2">
             <div class="d-flex align-items-start">
                 <div class="rounded-circle p-1 me-2" style="background: rgba(99,102,241,0.1); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
@@ -428,7 +428,7 @@ include_once '../includes/header.php';
         </div>
     </div>
     
-    <!-- Quick Commands -->
+    <!-- Quick Commands (Fixed) -->
     <div class="p-2" style="background: white; border-top: 1px solid #f1f5f9; flex-shrink: 0;">
         <div class="d-flex flex-wrap gap-1 justify-content-center">
             <button class="btn btn-sm btn-outline-primary px-2 py-1" onclick="setAICommand('create project ')" style="font-size: 0.7rem; border-radius: 8px;">📁 Project</button>
@@ -439,8 +439,8 @@ include_once '../includes/header.php';
         </div>
     </div>
     
-    <!-- Input -->
-    <div class="p-2" style="background: white; border-top: 1px solid #f1f5f9; flex-shrink: 0;">
+    <!-- Input Box (Fixed - Hamesha Neeche Visible) -->
+    <div class="p-2" style="background: white; border-top: 1px solid #f1f5f9; flex-shrink: 0; padding-bottom: max(10px, env(safe-area-inset-bottom)) !important;">
         <div class="input-group">
             <input type="text" id="aiCommandInput" class="form-control" 
                    placeholder="Type command..."
@@ -454,16 +454,12 @@ include_once '../includes/header.php';
     </div>
 </div>
 
-<!-- AI Processing Modal -->
-<div class="modal fade" id="aiProcessingModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 16px; border: none;">
-            <div class="modal-body text-center p-4">
-                <div class="spinner-border mb-3" style="color: #6366f1; width: 50px; height: 50px;"></div>
-                <h6 class="fw-bold mb-1" style="color: #1e293b;">Processing...</h6>
-                <p class="text-muted small mb-0">AI is working on your command</p>
-            </div>
-        </div>
+<!-- AI Processing Overlay (Simple Div - No Bootstrap Modal) -->
+<div id="aiProcessingOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 16px; padding: 30px; text-align: center; width: 280px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+        <div class="spinner-border mb-3" style="color: #6366f1; width: 50px; height: 50px;"></div>
+        <h6 class="fw-bold mb-1" style="color: #1e293b;">Processing...</h6>
+        <p class="text-muted small mb-0">AI is working on your command</p>
     </div>
 </div>
 
@@ -520,6 +516,7 @@ include_once '../includes/header.php';
         width: 100%;
         max-width: 100%;
         right: -100%;
+        height: 100dvh !important;
     }
     
     #aiFloatingBtn {
@@ -531,6 +528,33 @@ include_once '../includes/header.php';
     
     #aiFloatingBtn i {
         font-size: 1.2rem;
+    }
+    
+    .p-2 {
+        padding: 8px !important;
+    }
+    
+    .p-3 {
+        padding: 10px !important;
+    }
+}
+
+/* iPhone SE, iPhone 12 Mini, etc. */
+@media (max-width: 375px) {
+    #aiFloatingBtn {
+        bottom: 12px;
+        right: 12px;
+        width: 50px;
+        height: 50px;
+    }
+    
+    #aiFloatingBtn i {
+        font-size: 1.1rem;
+    }
+    
+    .btn-sm {
+        padding: 4px 8px !important;
+        font-size: 0.65rem !important;
     }
 }
 </style>
@@ -587,15 +611,16 @@ function addAIMessage(message, isUser) {
     container.scrollTop = container.scrollHeight;
 }
 
+// Show Processing (Simple Div - No Bootstrap)
 function showAIProcessing() {
-    const modal = new bootstrap.Modal(document.getElementById('aiProcessingModal'));
-    modal.show();
+    const overlay = document.getElementById('aiProcessingOverlay');
+    overlay.style.display = 'flex';
 }
 
+// Hide Processing (Direct DOM - 100% Guaranteed)
 function hideAIProcessing() {
-    const modalEl = document.getElementById('aiProcessingModal');
-    const modal = bootstrap.Modal.getInstance(modalEl);
-    if (modal) modal.hide();
+    const overlay = document.getElementById('aiProcessingOverlay');
+    overlay.style.display = 'none';
 }
 
 function processAICommand() {
@@ -625,7 +650,10 @@ function processAICommand() {
     })
     .then(response => response.json())
     .then(data => {
+        // Hide loader IMMEDIATELY
         hideAIProcessing();
+        
+        // Add AI response
         addAIMessage(data.message, false);
         
         // If action was successful, reload page after 2 seconds
@@ -636,6 +664,7 @@ function processAICommand() {
         }
     })
     .catch(error => {
+        // Hide loader IMMEDIATELY on error
         hideAIProcessing();
         addAIMessage('❌ Sorry, something went wrong. Please try again.', false);
         console.error('Error:', error);
