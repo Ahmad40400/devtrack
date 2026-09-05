@@ -20,8 +20,17 @@ define('MAIL_PASSWORD', 'your-app-password'); // Gmail App Password
 define('MAIL_FROM', 'your-email@gmail.com');
 define('MAIL_FROM_NAME', 'DevTrack');
 
-// Site URL (Reset Link ke liye)
-define('SITE_URL', 'https://trackcode.free.nf/');
+// =============================================
+// SITE URL - LOCALHOST (XAMPP) KE LIYE
+// =============================================
+// ✅ ABHI LOCALHOST KE LIYE YE URL USE HO RAHA HAI
+// ⚠️ JAB LIVE SITE PAR HOST KARO TO YE COMMENT HATA KAR NEECHE WALA URL LAGAO
+define('SITE_URL', 'http://localhost/devtrack/');
+
+// =============================================
+// LIVE URL - JAB ACTUAL SITE PAR HOST KARO
+// =============================================
+// define('SITE_URL', 'https://devtracker.free.nf/'); // ⚠️ LIVE KE LIYE YE UNCOMMENT KARO
 
 // Send Email Function
 function sendEmail($to, $subject, $htmlBody) {
