@@ -1,6 +1,6 @@
 <?php
 // =============================================
-// Main Configuration File
+// Main Configuration File (Localhost XAMPP)
 // =============================================
 
 // Error reporting
@@ -10,26 +10,32 @@ ini_set('display_errors', 1);
 // Session settings
 ini_set('session.cookie_httponly', 1);
 ini_set('session.use_only_cookies', 1);
-ini_set('session.cookie_secure', 0); // Set to 1 in production with HTTPS
+ini_set('session.cookie_secure', 0);
 
 // Application constants
 define('APP_NAME', 'DevTrack');
 define('APP_VERSION', '1.0.0');
+
+// =============================================
+// BASE_URL - LOCALHOST (XAMPP) KE LIYE
+// =============================================
+// ✅ ABHI LOCALHOST KE LIYE YE URL USE HO RAHA HAI
 define('BASE_URL', 'http://localhost/devtrack/');
+
+// =============================================
+// LIVE URL - JAB ACTUAL SITE PAR HOST KARO
+// =============================================
+// ⚠️ LIVE KE LIYE YE URL USE KARO:
+// define('BASE_URL', 'https://devtracker.free.nf/'); // LIVE KE LIYE YE UNCOMMENT KARO
+
 define('UPLOAD_PATH', __DIR__ . '/uploads/');
-define('MAX_FILE_SIZE', 5 * 1024 * 1024); // 5MB
+define('MAX_FILE_SIZE', 5 * 1024 * 1024);
 define('SITE_NAME', 'DevTrack');
 
 // Start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
-// Include core files
-require_once __DIR__ . '/config/database.php';
-require_once __DIR__ . '/includes/security.php';
-require_once __DIR__ . '/includes/functions.php';
-require_once __DIR__ . '/includes/auth.php';
 
 // CSRF token generation
 if (empty($_SESSION['csrf_token'])) {
