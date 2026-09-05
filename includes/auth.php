@@ -213,7 +213,7 @@ function requestPasswordReset($email) {
         [$email, $token, $expiresAt]
     );
     
-    // Send reset email - SITE_URL use karein
+    // Send reset email - SITE_URL use karein (Localhost)
     $resetLink = SITE_URL . 'reset-password.php?token=' . $token . '&email=' . urlencode($email);
     $mailSent = sendPasswordResetEmail($email, $resetLink);
     
