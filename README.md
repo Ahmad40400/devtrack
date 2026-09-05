@@ -1,3 +1,10 @@
+Bilkul! Yeh rahi **complete updated `README.md`** - aapke project ki saari details ke saath, naye features (OTP verification, Password Reset, Rate Limiting) bhi included.
+
+---
+
+## ✅ README.md (Complete Updated)
+
+```markdown
 # DevTrack - Developer Productivity & Portfolio Platform
 
 ## 🚀 Quick Start
@@ -13,7 +20,11 @@
 ### Core Features
 
 - 🔐 **Authentication**: Secure registration, login, logout with password hashing
+- ✉️ **OTP Email Verification**: 6-digit OTP verification on registration
+- 🔑 **Forgot Password**: Email-based password reset with secure tokens
+- 🛡️ **Rate Limiting**: Brute force protection on login (5 attempts / 15 minutes)
 - 📊 **Dashboard**: Interactive dashboard with statistics and charts
+- 🤖 **AI Assistant**: Natural language AI assistant for managing projects, tasks, skills
 - 📁 **Projects**: Full CRUD with image upload and status tracking
 - ✅ **Tasks**: Complete task management with priorities and deadlines
 - 🛠️ **Skills**: Track skills with proficiency levels and progress bars
@@ -40,50 +51,124 @@
 - XSS Prevention with htmlspecialchars()
 - Session Security with HttpOnly cookies
 - Input Validation and Sanitization
-- Rate Limiting for login attempts
+- **Rate Limiting** for login attempts (5 attempts / 15 minutes)
 - Secure File Uploads with validation
+- **OTP Email Verification** for registration
+- **Password Reset Tokens** (30 minutes expiry)
 
 ## 📁 Project Structure
 
+```
 devtrack/
-├── admin/ # Admin panel
-├── analytics/ # Analytics page
-├── api/ # API endpoints
-├── assets/ # CSS, JS, images
-├── auth/ # Authentication
-├── config/ # Configuration
-├── dashboard/ # User dashboard
-├── github/ # GitHub integration
-├── includes/ # Core includes
-├── learning/ # Learning roadmap
-├── portfolio/ # Public portfolio
-├── profile/ # User profile
-├── projects/ # Project management
-├── skills/ # Skills management
-├── tasks/ # Task management
-├── uploads/ # File uploads
-├── .htaccess # Security rules
-├── config.php # Main configuration
-├── index.php # Entry point
-├── login.php # Login page
-├── register.php # Registration page
-├── logout.php # Logout
-├── notifications.php # Notifications
-├── 404.php # Error page
-└── README.md # Documentation
+├── admin/                     # Admin panel
+│   ├── dashboard.php          # Admin dashboard
+│   ├── users.php              # User management
+│   ├── system-activity.php    # Activity logs
+│   └── create_admin.php       # Create admin user
+│
+├── analytics/                 # Analytics page
+│   └── index.php              # Charts & statistics
+│
+├── assets/
+│   ├── css/
+│   │   ├── style.css          # Main styles
+│   │   └── dark-mode.css      # Dark mode styles
+│   └── js/
+│       ├── main.js            # Global JS
+│       └── dark-mode.js       # Theme toggle
+│
+├── config/
+│   ├── database.php           # DB config (Live)
+│   ├── database_local.php     # DB config (Localhost)
+│   └── mail.php               # PHPMailer configuration
+│
+├── dashboard/                 # User dashboard
+│   ├── index.php              # Main dashboard + AI Assistant UI
+│   └── ai_assistant.php       # AI backend logic
+│
+├── includes/
+│   ├── phpmailer/             # PHPMailer library
+│   │   ├── PHPMailer.php
+│   │   ├── SMTP.php
+│   │   └── Exception.php
+│   ├── auth.php               # Authentication + Rate Limiting + Password Reset
+│   ├── functions.php          # Helper functions
+│   ├── header.php             # Header + Navbar + Sidebar
+│   ├── footer.php             # Footer
+│   └── security.php           # CSRF, validation, hashing
+│
+├── learning/                  # Learning roadmap
+│   ├── index.php              # List goals
+│   ├── add.php                # Add goal
+│   ├── edit.php               # Edit goal
+│   ├── delete.php             # Delete goal
+│   └── complete.php           # Complete goal
+│
+├── projects/                  # Project management
+│   ├── index.php              # List projects
+│   ├── add.php                # Add project
+│   ├── edit.php               # Edit project
+│   ├── view.php               # View project
+│   ├── delete.php             # Delete project
+│   └── download.php           # Download files
+│
+├── skills/                    # Skills management
+│   └── index.php              # List & add skills
+│
+├── tasks/                     # Task management
+│   ├── index.php              # List tasks
+│   ├── add.php                # Add task
+│   ├── edit.php               # Edit task
+│   ├── delete.php             # Delete task
+│   └── complete.php           # Complete task
+│
+├── users/                     # Developers community
+│   ├── index.php              # Browse developers
+│   └── view.php               # View developer profile
+│
+├── github/                    # GitHub integration
+│   └── index.php              # Connect & sync GitHub
+│
+├── profile/                   # User profile
+│   ├── index.php              # View profile
+│   ├── edit.php               # Edit profile
+│   └── change-password.php    # Change password
+│
+├── portfolio/                 # Public portfolio
+│   └── index.php              # Portfolio page
+│
+├── uploads/                   # File uploads
+│   ├── profile/               # User avatars
+│   └── projects/              # Project images & files
+│
+├── .htaccess                  # Security rules
+├── config.php                 # Main configuration
+├── index.php                  # Entry point (Landing page)
+├── login.php                  # Login page (Rate Limiting)
+├── register.php               # Registration page (OTP Verification)
+├── forgot-password.php        # Forgot password page
+├── reset-password.php         # Reset password page
+├── logout.php                 # Logout
+├── notifications.php          # Notifications
+├── 404.php                    # Custom 404 page
+├── error.php                  # Error page
+└── README.md                  # Documentation
+```
 
 ## 🧪 Testing
 
 ### Test Credentials
 
 - **Admin**: admin@devtrack.com / admin123
-- **User**: Register a new account
+- **User**: Register a new account (OTP verification required)
 
 ### Testing URLs
 
 - Home: `http://localhost/devtrack/`
 - Login: `http://localhost/devtrack/login.php`
 - Register: `http://localhost/devtrack/register.php`
+- Forgot Password: `http://localhost/devtrack/forgot-password.php`
+- Reset Password: `http://localhost/devtrack/reset-password.php`
 - Dashboard: `http://localhost/devtrack/dashboard/`
 - Portfolio: `http://localhost/devtrack/portfolio/?username=yourusername`
 
@@ -115,13 +200,22 @@ devtrack/
 - Notifications System
 - Analytics & Statistics
 
-### Phase 4: Polish & Optimization ✅
+### Phase 4: Security & AI ✅
 
+- OTP Email Verification
+- Password Reset System
+- Rate Limiting (Brute Force Protection)
+- AI Assistant (Natural Language Commands)
 - Security Enhancements
+- Documentation
+
+### Phase 5: Polish & Optimization ✅
+
 - Performance Optimization
 - Error Handling
-- Documentation
 - UI/UX Improvements
+- Mobile Responsive AI Panel
+- Multi-Language AI Support
 
 ## 🔧 Configuration
 
@@ -135,3 +229,93 @@ $db_name = 'devtrack';
 $db_user = 'root';
 $db_pass = '';
 ```
+
+### Email (PHPMailer)
+
+Update `config/mail.php`:
+
+```php
+define('MAIL_HOST', 'smtp.gmail.com');
+define('MAIL_PORT', 587);
+define('MAIL_USERNAME', 'your-email@gmail.com');
+define('MAIL_PASSWORD', 'your-app-password');
+define('SITE_URL', 'http://localhost/devtrack/');
+```
+
+### GitHub Repository
+
+```bash
+git clone https://github.com/Ahmad40400/devtrack.git
+cd devtrack
+```
+
+## 🤖 AI Assistant Commands
+
+### Projects
+
+- `create project MyApp by 15 january`
+- `delete project MyApp`
+- `complete project MyApp`
+- `show projects`
+
+### Tasks
+
+- `add task Fix bug with high priority by next week`
+- `mark task named Fix bug completed`
+- `mark task named Fix bug in progress`
+- `delete task named Fix bug`
+- `show tasks`
+
+### Skills
+
+- `add skill Python with 80%`
+- `update skill named PHP to 90%`
+- `show skills`
+
+### Learning Goals
+
+- `create goal Learn React with 20%`
+- `update goal named Learn React to 50%`
+- `complete goal named Learn React`
+- `show goals`
+
+### General
+
+- `show my stats`
+- `hello`
+- `help`
+
+## 📄 License
+
+This project is for educational purposes. Feel free to use and modify.
+
+---
+
+## 📞 Contact
+
+- **Developer**: Ahmad
+- **Email**: ahmieditz@gmail.com
+- **Website**: [https://devtracker.free.nf](https://devtracker.free.nf)
+
+---
+
+© 2026 DevTrack. All rights reserved.
+```
+
+---
+
+## ✅ Ab README.md Complete Hai!
+
+| Feature | Included |
+|---------|----------|
+| Project Structure | ✅ Updated with all files |
+| Features | ✅ OTP, Password Reset, Rate Limiting, AI Assistant |
+| Security | ✅ All security features listed |
+| Testing | ✅ Test credentials & URLs |
+| AI Commands | ✅ Full list of commands |
+| Configuration | ✅ Database + Email setup |
+| Contact | ✅ Developer info |
+
+---
+
+**Ab README.md perfectly updated hai!** 🎯✨
