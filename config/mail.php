@@ -15,10 +15,13 @@ require_once __DIR__ . '/../includes/PHPMailer/Exception.php';
 // Mail Settings (Gmail - Example)
 define('MAIL_HOST', 'smtp.gmail.com');
 define('MAIL_PORT', 587);
-define('MAIL_USERNAME', 'your-mail.com');
-define('MAIL_PASSWORD', 'app-password');
-define('MAIL_FROM', 'your-mail.com');
+define('MAIL_USERNAME', 'your-email@gmail.com'); // Apna Gmail likho
+define('MAIL_PASSWORD', 'your-app-password'); // Gmail App Password
+define('MAIL_FROM', 'your-email@gmail.com');
 define('MAIL_FROM_NAME', 'DevTrack');
+
+// Site URL (Reset Link ke liye)
+define('SITE_URL', 'https://trackcode.free.nf/');
 
 // Send Email Function
 function sendEmail($to, $subject, $htmlBody) {
@@ -95,11 +98,39 @@ function sendWelcomeEmail($to, $username) {
                 <li>Showcase your portfolio</li>
             </ul>
             <div style="text-align: center; margin-top: 20px;">
-                <a href="https://trackcode.free.nf/" style="background: #6366f1; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: bold;">Get Started</a>
+                <a href="' . SITE_URL . '" style="background: #6366f1; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: bold;">Get Started</a>
             </div>
         </div>
         <div style="text-align: center; margin-top: 20px;">
             <p style="color: #94a3b8; font-size: 12px;">© 2026 DevTrack. All rights reserved.</p>
+        </div>
+    </div>
+    ';
+    
+    return sendEmail($to, $subject, $htmlBody);
+}
+
+// Send Password Reset Email
+function sendPasswordResetEmail($to, $resetLink) {
+    $subject = 'DevTrack - Password Reset';
+    
+    $htmlBody = '
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #f8fafc; border-radius: 10px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="color: #6366f1;">DevTrack</h2>
+            <p style="color: #64748b;">Password Reset Request</p>
+        </div>
+        <div style="background: white; padding: 30px; border-radius: 10px; text-align: center;">
+            <p style="color: #334155; font-size: 16px;">Click the button below to reset your password:</p>
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="' . $resetLink . '" style="background: #6366f1; color: white; padding: 14px 35px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold;">Reset Password</a>
+            </div>
+            <p style="color: #64748b; font-size: 14px;">Or copy this link:</p>
+            <p style="color: #6366f1; font-size: 12px; word-break: break-all;">' . $resetLink . '</p>
+            <p style="color: #94a3b8; font-size: 12px; margin-top: 20px;">This link is valid for 30 minutes.</p>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <p style="color: #94a3b8; font-size: 12px;">If you didn\'t request this, please ignore this email.</p>
         </div>
     </div>
     ';
