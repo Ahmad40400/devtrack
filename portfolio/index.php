@@ -310,6 +310,101 @@ $page_title = ($user['full_name'] ?? $user['username']) . ' - Portfolio';
             color: #1e293b;
         }
         
+        /* Navbar */
+        .portfolio-nav {
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #f1f5f9;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 10px rgba(0,0,0,0.03);
+        }
+        
+        .portfolio-nav .nav-container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .portfolio-nav .nav-brand {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #4f46e5;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        
+        .portfolio-nav .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+        
+        .portfolio-nav .nav-link {
+            color: #64748b;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+        
+        .portfolio-nav .nav-link:hover {
+            color: #4f46e5;
+        }
+        
+        .portfolio-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #4f46e5;
+            transition: width 0.3s ease;
+        }
+        
+        .portfolio-nav .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .portfolio-nav .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #64748b;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .portfolio-nav .nav-links {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: white;
+                padding: 15px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .portfolio-nav .nav-links.active {
+                display: flex;
+            }
+            
+            .portfolio-nav .nav-toggle {
+                display: block;
+            }
+        }
+        
         /* Hero Section */
         .hero {
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4f46e5 100%);
@@ -317,6 +412,7 @@ $page_title = ($user['full_name'] ?? $user['username']) . ' - Portfolio';
             padding: 100px 0 80px;
             position: relative;
             overflow: hidden;
+            text-align: center;
         }
         
         .hero::before {
@@ -344,6 +440,9 @@ $page_title = ($user['full_name'] ?? $user['username']) . ' - Portfolio';
         .hero .container {
             position: relative;
             z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
         
         .hero-avatar {
@@ -353,29 +452,41 @@ $page_title = ($user['full_name'] ?? $user['username']) . ' - Portfolio';
             border-radius: 50%;
             border: 4px solid rgba(255,255,255,0.2);
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
         }
         
         .hero-name {
-            font-size: 3rem;
+            font-size: 2.8rem;
             font-weight: 800;
             background: linear-gradient(135deg, #ffffff, #a5b4fc);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-top: 20px;
+            margin-bottom: 5px;
         }
         
         .hero-username {
             color: rgba(255,255,255,0.6);
             font-size: 1.1rem;
+            margin-bottom: 20px;
         }
         
         .hero-bio {
-            color: rgba(255,255,255,0.8);
+            color: rgba(255,255,255,0.85);
             max-width: 600px;
             margin: 20px auto 0;
             font-size: 1.05rem;
             line-height: 1.8;
+        }
+        
+        .hero-default-bio {
+            color: rgba(255,255,255,0.7);
+            max-width: 600px;
+            margin: 20px auto 0;
+            font-size: 1rem;
+            line-height: 1.7;
+            font-style: italic;
         }
         
         .hero-social a {
@@ -384,41 +495,12 @@ $page_title = ($user['full_name'] ?? $user['username']) . ' - Portfolio';
             margin: 0 10px;
             transition: all 0.3s ease;
             display: inline-block;
+            text-decoration: none;
         }
         
         .hero-social a:hover {
             color: white;
             transform: translateY(-3px);
-        }
-        
-        /* Navbar */
-        .portfolio-nav {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #f1f5f9;
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .portfolio-nav .nav-brand {
-            font-weight: 800;
-            font-size: 1.2rem;
-            color: #4f46e5;
-            letter-spacing: 0.05em;
-        }
-        
-        .portfolio-nav .nav-link {
-            color: #64748b;
-            font-weight: 500;
-            font-size: 0.9rem;
-            margin: 0 15px;
-            transition: color 0.2s ease;
-        }
-        
-        .portfolio-nav .nav-link:hover {
-            color: #4f46e5;
         }
         
         /* Section */
@@ -432,13 +514,6 @@ $page_title = ($user['full_name'] ?? $user['username']) . ' - Portfolio';
             font-weight: 800;
             color: #1e293b;
             margin-bottom: 10px;
-        }
-        
-        .section-subtitle {
-            text-align: center;
-            color: #94a3b8;
-            font-size: 0.95rem;
-            margin-bottom: 40px;
         }
         
         .section-divider {
@@ -482,10 +557,16 @@ $page_title = ($user['full_name'] ?? $user['username']) . ' - Portfolio';
             margin-bottom: 8px;
         }
         
-        .skill-card p {
+        .skill-card .skill-level {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .skill-card .skill-category {
             color: #64748b;
-            font-size: 0.85rem;
-            margin-bottom: 15px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
         }
         
         .skill-card .progress {
@@ -646,15 +727,16 @@ $page_title = ($user['full_name'] ?? $user['username']) . ' - Portfolio';
 
 <!-- Navbar -->
 <nav class="portfolio-nav">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center">
-            <span class="nav-brand">PORTFOLIO</span>
-            <div class="d-none d-md-block">
-                <a href="#home" class="nav-link">Home</a>
-                <a href="#skills" class="nav-link">Skills</a>
-                <a href="#projects" class="nav-link">Projects</a>
-                <a href="#contact" class="nav-link">Contact</a>
-            </div>
+    <div class="nav-container">
+        <span class="nav-brand">PORTFOLIO</span>
+        <button class="nav-toggle" onclick="toggleNav()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="nav-links" id="navLinks">
+            <a href="#home" class="nav-link">Home</a>
+            <a href="#skills" class="nav-link">Skills</a>
+            <a href="#projects" class="nav-link">Projects</a>
+            <a href="#contact" class="nav-link">Contact</a>
         </div>
     </div>
 </nav>
@@ -669,6 +751,12 @@ $page_title = ($user['full_name'] ?? $user['username']) . ' - Portfolio';
         
         <?php if ($user['bio']): ?>
             <p class="hero-bio"><?php echo nl2br(sanitizeOutput($user['bio'])); ?></p>
+        <?php else: ?>
+            <p class="hero-default-bio">
+                👋 Hi! I'm <?php echo sanitizeOutput($user['full_name'] ?: $user['username']); ?>, a passionate developer.
+                I love building creative solutions and exploring new technologies.
+                Check out my projects below! 🚀
+            </p>
         <?php endif; ?>
         
         <div class="hero-social mt-4">
@@ -704,61 +792,29 @@ $page_title = ($user['full_name'] ?? $user['username']) . ' - Portfolio';
         
         <?php if (!empty($skills)): ?>
             <div class="row g-4">
-                <!-- Frontend -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="skill-card">
-                        <div class="skill-icon" style="background: rgba(239,68,68,0.1);">
-                            <i class="fab fa-html5" style="color: #ef4444;"></i>
-                        </div>
-                        <h5>Frontend Development</h5>
-                        <p>HTML, CSS, JavaScript, React, Bootstrap</p>
-                        <div class="progress">
-                            <div class="progress-bar" style="width: 85%; background: linear-gradient(90deg, #ef4444, #f97316);"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Backend -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="skill-card">
-                        <div class="skill-icon" style="background: rgba(16,185,129,0.1);">
-                            <i class="fas fa-server" style="color: #10b981;"></i>
-                        </div>
-                        <h5>Backend Development</h5>
-                        <p>PHP, Node.js, Python, MySQL, MongoDB</p>
-                        <div class="progress">
-                            <div class="progress-bar" style="width: 75%; background: linear-gradient(90deg, #10b981, #34d399);"></div>
+                <?php foreach ($skills as $skill): ?>
+                    <div class="col-md-4 col-lg-3">
+                        <div class="skill-card">
+                            <div class="skill-icon" style="background: rgba(99,102,241,0.1);">
+                                <?php if ($skill['icon']): ?>
+                                    <i class="<?php echo $skill['icon']; ?>" style="color: #6366f1;"></i>
+                                <?php else: ?>
+                                    <i class="fas fa-code" style="color: #6366f1;"></i>
+                                <?php endif; ?>
+                            </div>
+                            <h5><?php echo sanitizeOutput($skill['name']); ?></h5>
+                            <div class="skill-level" style="color: <?php echo $skill['proficiency'] >= 80 ? '#10b981' : ($skill['proficiency'] >= 50 ? '#f59e0b' : '#ef4444'); ?>;">
+                                <?php echo $skill['proficiency']; ?>%
+                            </div>
+                            <div class="skill-category"><?php echo ucfirst($skill['experience_level']); ?></div>
+                            <div class="progress">
+                                <div class="progress-bar" 
+                                     style="width: <?php echo $skill['proficiency']; ?>%; background: linear-gradient(90deg, #6366f1, #a855f7);">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Responsive -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="skill-card">
-                        <div class="skill-icon" style="background: rgba(59,130,246,0.1);">
-                            <i class="fas fa-mobile-alt" style="color: #3b82f6;"></i>
-                        </div>
-                        <h5>Responsive Design</h5>
-                        <p>Mobile-first approach, cross-browser compatibility</p>
-                        <div class="progress">
-                            <div class="progress-bar" style="width: 90%; background: linear-gradient(90deg, #3b82f6, #60a5fa);"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Tools -->
-                <div class="col-md-6 col-lg-3">
-                    <div class="skill-card">
-                        <div class="skill-icon" style="background: rgba(99,102,241,0.1);">
-                            <i class="fas fa-tools" style="color: #6366f1;"></i>
-                        </div>
-                        <h5>Tools & Technologies</h5>
-                        <p>Git, Docker, AWS, REST APIs, Agile Methodologies</p>
-                        <div class="progress">
-                            <div class="progress-bar" style="width: 80%; background: linear-gradient(90deg, #6366f1, #a855f7);"></div>
-                        </div>
-                    </div>
-                </div>
+                <?php endforeach; ?>
             </div>
         <?php else: ?>
             <p class="text-center text-muted">No skills added yet.</p>
@@ -767,7 +823,7 @@ $page_title = ($user['full_name'] ?? $user['username']) . ' - Portfolio';
 </section>
 
 <!-- Projects Section -->
-<section class="section bg-light" id="projects" style="background: #f8fafc;">
+<section class="section" id="projects" style="background: #f8fafc;">
     <div class="container">
         <h2 class="section-title">My Projects</h2>
         <div class="section-divider"></div>
@@ -890,5 +946,10 @@ $page_title = ($user['full_name'] ?? $user['username']) . ' - Portfolio';
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function toggleNav() {
+    document.getElementById('navLinks').classList.toggle('active');
+}
+</script>
 </body>
 </html>
