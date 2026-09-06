@@ -147,7 +147,7 @@ include_once '../includes/header.php';
             </div>
         </div>
         
-        <!-- Projects -->
+        <!-- Projects (Clickable) -->
         <div class="card border-0 shadow-sm mb-4" style="border-radius: 14px;">
             <div class="card-header bg-transparent border-0 pt-3 px-4 d-flex justify-content-between align-items-center">
                 <h6 class="card-title mb-0 fw-bold" style="color: #1e293b;">
@@ -164,35 +164,38 @@ include_once '../includes/header.php';
                     <div class="row g-2">
                         <?php foreach ($projects as $project): ?>
                             <div class="col-md-6">
-                                <div class="card border-0" style="background: #f8fafc; border-radius: 10px;">
-                                    <div class="card-body p-3">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <h6 class="mb-1 fw-bold small" style="color: #1e293b;">
-                                                <?php echo sanitizeOutput($project['title']); ?>
-                                            </h6>
-                                            <span class="badge fw-normal px-2 py-1" style="font-size: 0.6rem; border-radius: 6px; background: rgba(16,185,129,0.1); color: #047857;">
-                                                <?php echo str_replace('-', ' ', $project['status']); ?>
-                                            </span>
-                                        </div>
-                                        <?php if ($project['description']): ?>
-                                            <p class="text-muted small mb-1" style="font-size: 0.75rem;">
-                                                <?php echo substr(sanitizeOutput($project['description']), 0, 60); ?>
-                                            </p>
-                                        <?php endif; ?>
-                                        <?php if ($project['technologies']): ?>
-                                            <div class="d-flex flex-wrap gap-1">
-                                                <?php 
-                                                    $techs = explode(',', $project['technologies']);
-                                                    foreach (array_slice($techs, 0, 3) as $tech):
-                                                ?>
-                                                    <span class="badge fw-normal px-2 py-1" style="font-size: 0.6rem; border-radius: 6px; background: white; color: #475569; border: 1px solid #e2e8f0;">
-                                                        <?php echo trim(sanitizeOutput($tech)); ?>
-                                                    </span>
-                                                <?php endforeach; ?>
+                                <a href="<?php echo BASE_URL; ?>projects/view-public.php?id=<?php echo $project['id']; ?>&user=<?php echo $project['user_id']; ?>" 
+                                   class="text-decoration-none">
+                                    <div class="card border-0 project-card" style="background: #f8fafc; border-radius: 10px; transition: all 0.2s ease;">
+                                        <div class="card-body p-3">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <h6 class="mb-1 fw-bold small" style="color: #1e293b;">
+                                                    <?php echo sanitizeOutput($project['title']); ?>
+                                                </h6>
+                                                <span class="badge fw-normal px-2 py-1" style="font-size: 0.6rem; border-radius: 6px; background: rgba(16,185,129,0.1); color: #047857;">
+                                                    <?php echo str_replace('-', ' ', $project['status']); ?>
+                                                </span>
                                             </div>
-                                        <?php endif; ?>
+                                            <?php if ($project['description']): ?>
+                                                <p class="text-muted small mb-1" style="font-size: 0.75rem;">
+                                                    <?php echo substr(sanitizeOutput($project['description']), 0, 60); ?>
+                                                </p>
+                                            <?php endif; ?>
+                                            <?php if ($project['technologies']): ?>
+                                                <div class="d-flex flex-wrap gap-1">
+                                                    <?php 
+                                                        $techs = explode(',', $project['technologies']);
+                                                        foreach (array_slice($techs, 0, 3) as $tech):
+                                                    ?>
+                                                        <span class="badge fw-normal px-2 py-1" style="font-size: 0.6rem; border-radius: 6px; background: white; color: #475569; border: 1px solid #e2e8f0;">
+                                                            <?php echo trim(sanitizeOutput($tech)); ?>
+                                                        </span>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -223,5 +226,13 @@ include_once '../includes/header.php';
         <?php endif; ?>
     </div>
 </div>
+
+<style>
+.project-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    border-color: #e2e8f0;
+}
+</style>
 
 <?php include_once '../includes/footer.php'; ?>
