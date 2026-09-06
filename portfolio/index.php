@@ -822,7 +822,7 @@ $page_title = ($user['full_name'] ?? $user['username']) . ' - Portfolio';
     </div>
 </section>
 
-<!-- Projects Section -->
+<!-- Projects Section (Clickable) -->
 <section class="section" id="projects" style="background: #f8fafc;">
     <div class="container">
         <h2 class="section-title">My Projects</h2>
@@ -832,57 +832,63 @@ $page_title = ($user['full_name'] ?? $user['username']) . ' - Portfolio';
             <div class="row g-4">
                 <?php foreach ($projects as $project): ?>
                     <div class="col-md-6 col-lg-4">
-                        <div class="project-card">
-                            <?php if ($project['image']): ?>
-                                <img src="<?php echo BASE_URL; ?>uploads/projects/<?php echo $project['image']; ?>" 
-                                     class="card-img-top" alt="<?php echo sanitizeOutput($project['title']); ?>">
-                            <?php else: ?>
-                                <div class="card-img-top d-flex align-items-center justify-content-center" style="background: #f1f5f9;">
-                                    <i class="fas fa-folder-open" style="font-size: 3rem; color: #cbd5e1;"></i>
-                                </div>
-                            <?php endif; ?>
-                            
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo sanitizeOutput($project['title']); ?></h5>
-                                <?php if ($project['description']): ?>
-                                    <p class="card-text"><?php echo substr(sanitizeOutput($project['description']), 0, 100); ?></p>
-                                <?php endif; ?>
-                                
-                                <?php if ($project['technologies']): ?>
-                                    <div class="tech-tags">
-                                        <?php 
-                                            $techs = explode(',', $project['technologies']);
-                                            foreach (array_slice($techs, 0, 4) as $tech):
-                                        ?>
-                                            <span class="tech-tag"><?php echo trim(sanitizeOutput($tech)); ?></span>
-                                        <?php endforeach; ?>
+                        <a href="<?php echo BASE_URL; ?>projects/view-public.php?id=<?php echo $project['id']; ?>&user=<?php echo $user['id']; ?>" 
+                           class="text-decoration-none">
+                            <div class="project-card" style="cursor: pointer;">
+                                <?php if ($project['image']): ?>
+                                    <img src="<?php echo BASE_URL; ?>uploads/projects/<?php echo $project['image']; ?>" 
+                                         class="card-img-top" alt="<?php echo sanitizeOutput($project['title']); ?>">
+                                <?php else: ?>
+                                    <div class="card-img-top d-flex align-items-center justify-content-center" style="background: #f1f5f9;">
+                                        <i class="fas fa-folder-open" style="font-size: 3rem; color: #cbd5e1;"></i>
                                     </div>
                                 <?php endif; ?>
-                            </div>
-                            
-                            <div class="card-footer">
-                                <span class="status-badge bg-<?php echo getStatusBadge($project['status']); ?> text-white">
-                                    <?php echo str_replace('-', ' ', $project['status']); ?>
-                                </span>
-                                <div class="d-flex gap-2">
-                                    <?php if ($project['github_url']): ?>
-                                        <a href="<?php echo sanitizeOutput($project['github_url']); ?>" target="_blank" class="btn btn-sm btn-dark">
-                                            <i class="fab fa-github"></i>
-                                        </a>
+                                
+                                <div class="card-body">
+                                    <h5 class="card-title" style="color: #1e293b;"><?php echo sanitizeOutput($project['title']); ?></h5>
+                                    <?php if ($project['description']): ?>
+                                        <p class="card-text"><?php echo substr(sanitizeOutput($project['description']), 0, 100); ?></p>
                                     <?php endif; ?>
-                                    <?php if ($project['demo_url']): ?>
-                                        <a href="<?php echo sanitizeOutput($project['demo_url']); ?>" target="_blank" class="btn btn-sm btn-success">
-                                            <i class="fas fa-external-link-alt"></i>
-                                        </a>
-                                    <?php endif; ?>
-                                    <?php if ($project['file_path'] && $project['allow_download']): ?>
-                                        <a href="<?php echo BASE_URL; ?>projects/download.php?project=<?php echo $project['id']; ?>" class="btn btn-sm btn-primary">
-                                            <i class="fas fa-download"></i>
-                                        </a>
+                                    
+                                    <?php if ($project['technologies']): ?>
+                                        <div class="tech-tags">
+                                            <?php 
+                                                $techs = explode(',', $project['technologies']);
+                                                foreach (array_slice($techs, 0, 4) as $tech):
+                                            ?>
+                                                <span class="tech-tag"><?php echo trim(sanitizeOutput($tech)); ?></span>
+                                            <?php endforeach; ?>
+                                        </div>
                                     <?php endif; ?>
                                 </div>
+                                
+                                <div class="card-footer">
+                                    <span class="status-badge bg-<?php echo getStatusBadge($project['status']); ?> text-white">
+                                        <?php echo str_replace('-', ' ', $project['status']); ?>
+                                    </span>
+                                    <div class="d-flex gap-2">
+                                        <?php if ($project['github_url']): ?>
+                                            <a href="<?php echo sanitizeOutput($project['github_url']); ?>" target="_blank" 
+                                               onclick="event.stopPropagation()" class="btn btn-sm btn-dark">
+                                                <i class="fab fa-github"></i>
+                                            </a>
+                                        <?php endif; ?>
+                                        <?php if ($project['demo_url']): ?>
+                                            <a href="<?php echo sanitizeOutput($project['demo_url']); ?>" target="_blank" 
+                                               onclick="event.stopPropagation()" class="btn btn-sm btn-success">
+                                                <i class="fas fa-external-link-alt"></i>
+                                            </a>
+                                        <?php endif; ?>
+                                        <?php if ($project['file_path'] && $project['allow_download']): ?>
+                                            <a href="<?php echo BASE_URL; ?>projects/download.php?project=<?php echo $project['id']; ?>" 
+                                               onclick="event.stopPropagation()" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 <?php endforeach; ?>
             </div>
